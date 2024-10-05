@@ -66,8 +66,8 @@ $result = $stmt->fetchAll();
               <tr>
                 <td><?=$row['member_id'];?></td>
                 <td><?=$row['member_name'];?></td>
-                <td>xx</td>
-                <td>xx</td>
+                <td><?=$row['member_phone'];?></td>
+                <td><?=$row['member_email'];?></td>
                 <td><a href="edit.php?id=<?=$row['member_id'];?>&act=edit" class="btn btn-warning btn-sm">แก้ไข</a></td>
                 <td><a href="delete.php?id=<?=$row['member_id'];?>&act=delete" class="btn btn-danger btn-sm" onclick="return confirm('ยืนยันการลบข้อมูล !!');">ลบ</a></td>
               </tr>

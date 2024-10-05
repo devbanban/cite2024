@@ -1,10 +1,10 @@
 <?php
 //ถ้ามีค่าส่งมาจากฟอร์ม
-if(isset($_POST['member_name']) && isset($_POST['action']) && $_POST['action']=='add'){
+if(isset($_POST['member_name']) && isset($_POST['member_phone']) && isset($_POST['action']) && $_POST['action']=='add'){
 
-echo '<pre>';
-print_r($_POST);
-exit();
+// echo '<pre>';
+// print_r($_POST);
+// exit();
 
 //ไฟล์เชื่อมต่อฐานข้อมูล
 require_once 'config/condb.php'; 
@@ -14,15 +14,32 @@ try {
 
     //ประกาศตัวแปรรับค่าจากฟอร์ม
     $member_name = $_POST['member_name'];
+    $member_phone = $_POST['member_phone'];
+    $member_email = $_POST['member_email'];
     //sql insert
     $stmt = $condb->prepare("INSERT INTO tbl_member
-    (member_name)
+
+    (
+    member_name, 
+    member_phone, 
+    member_email
+    )
+
     VALUES 
-    (:member_name)
+    (
+    :member_name,
+    :member_phone,
+    :member_email
+    )
+
+
     ");
 
     //bindparam STR // INT
     $stmt->bindParam(':member_name', $member_name, PDO::PARAM_STR);
+    $stmt->bindParam(':member_phone', $member_phone, PDO::PARAM_STR);
+    $stmt->bindParam(':member_email', $member_email, PDO::PARAM_STR);
+    
 
     //ถ้า stmt ทำงานถูกต้อง 
      if($stmt->execute()){
@@ -115,6 +132,22 @@ catch(Exception $e) {
                 <input type="text" name="member_name" class="form-control" required placeholder="ชื่อสมาชิก">
               </div>
             </div>
+
+            <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">เบอร์โทร</label>
+              <div class="col-sm-7">
+                <input type="text" name="member_phone" class="form-control" required placeholder="เบอร์โทร" minlength="10" maxlength="10">
+              </div>
+            </div>
+
+            <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-7">
+                <input type="email" name="member_email" class="form-control" required placeholder="Email">
+              </div>
+            </div>
+
+
             <div class="row mb-2">
               <label class="col-sm-2"></label>
               <div class="col-sm-3">

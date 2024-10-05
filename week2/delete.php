@@ -2,9 +2,9 @@
 //ถ้ามีค่าส่งมาจากฟอร์ม
  if(isset($_GET['id']) && isset($_GET['act']) && $_GET['act']=='delete'){
 
-echo '<pre>';
-print_r($_GET);
-exit();
+// echo '<pre>';
+// print_r($_GET);
+// exit();
 
 //ไฟล์เชื่อมต่อฐานข้อมูล
 require_once 'config/condb.php'; 

@@ -5,9 +5,9 @@ require_once 'config/condb.php';
 //ถ้ามีค่าส่งมาจากฟอร์ม
     if(isset($_POST['member_name']) && isset($_POST['id']) && isset($_POST['action']) && $_POST['action']=='edit'){
 
-echo '<pre>';
-print_r($_POST);
-exit();
+// echo '<pre>';
+// print_r($_POST);
+// exit();
 
 //trigger exception in a "try" block
 try { 
@@ -15,15 +15,24 @@ try {
     //ประกาศตัวแปรรับค่าจากฟอร์ม
     $member_name = $_POST['member_name'];
     $id = $_POST['id'];
+    $member_phone = $_POST['member_phone'];
+    $member_email = $_POST['member_email'];
+
+
     //sql update
     $stmtUpdate = $condb->prepare("UPDATE tbl_member SET 
-        member_name=:member_name
+        member_name=:member_name,
+        member_phone=:member_phone,
+        member_email=:member_email
+
     WHERE member_id=:id 
     ");
 
     //bindparam STR // INT
     $stmtUpdate->bindParam(':id', $id, PDO::PARAM_INT);
     $stmtUpdate->bindParam(':member_name', $member_name, PDO::PARAM_STR);
+    $stmtUpdate->bindParam(':member_phone', $member_phone, PDO::PARAM_STR);
+    $stmtUpdate->bindParam(':member_email', $member_email, PDO::PARAM_STR);
 
     //ถ้า stmt ทำงานถูกต้อง 
      if($stmtUpdate->execute()){
@@ -41,8 +50,8 @@ try {
 
 } //catch exception
 catch(Exception $e) {
-  //echo 'Message: ' .$e->getMessage();
-  //exit;
+  // echo 'Message: ' .$e->getMessage();
+  // exit;
    echo '<script>
              setTimeout(function() {
               swal({
@@ -131,6 +140,21 @@ if(isset($_GET['id'])){
                 <input type="text" name="member_name" class="form-control" required placeholder="ชื่อสมาชิก" value="<?=$editData['member_name'];?>">
               </div>
             </div>
+
+            <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">เบอร์โทร</label>
+              <div class="col-sm-7">
+                <input type="text" name="member_phone" class="form-control" required placeholder="เบอร์โทร" minlength="10" maxlength="10" value="<?=$editData['member_phone'];?>">
+              </div>
+            </div>
+
+            <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-7">
+                <input type="email" name="member_email" class="form-control" required placeholder="Email" value="<?=$editData['member_email'];?>">
+              </div>
+            </div>
+            
             <div class="row mb-2">
               <label class="col-sm-2"></label>
               <div class="col-sm-3">
