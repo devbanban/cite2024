@@ -3,13 +3,13 @@
 require_once 'config/condb.php'; 
 
 //ถ้ามีค่าส่งมาจากฟอร์ม
-if(isset($_POST['id']) && isset($_POST['action']) && $_POST['action']=='edit'){
+if(isset($_POST['id']) && isset($_POST['img_name']) && isset($_POST['action']) && $_POST['action']=='edit'){
 
-echo '<pre>';
-print_r($_POST);
-echo '<hr>';
-print_r($_FILES);
-exit();
+// echo '<pre>';
+// print_r($_POST);
+// echo '<hr>';
+// print_r($_FILES);
+// exit();
 
 
 
@@ -35,26 +35,35 @@ try {
     $newname = 'img_'.$numrand.$date1.$typefile;
     $path_copy=$path.$newname;
 
+    //คัดลอกไฟล์ไปยังโฟลเดอร์
+    move_uploaded_file($_FILES['img_file_name']['tmp_name'],$path_copy); 
+
 //ลบไฟล์ภาพ
 unlink('upload/'.$_POST['imgFile']);
 
 }else{ 
     $newname=$_POST['imgFile']; 
+    $path_copy = $_POST['oldPath'];
 }
-    
+
+//ประกาศตัวแปรรับค่าจากฟอร์ม
+$img_name = $_POST['img_name'];
+ 
+
     //sql update
     $stmtUpdate = $condb->prepare("UPDATE tbl_upload SET 
-    img_file_name='$newname'
+    img_file_name='$newname',
+    img_name=:img_name,
+    img_path='$path_copy'
     WHERE id=:id
     ");
-
-     //bindparam STR // INT
+//bindparam STR // INT
      $stmtUpdate->bindParam(':id', $_POST['id'], PDO::PARAM_INT);
+     $stmtUpdate->bindParam(':img_name', $_POST['img_name'], PDO::PARAM_STR);
  
     //ถ้า stmt ทำงานถูกต้อง 
 if($stmtUpdate->execute()){
-//คัดลอกไฟล์ไปยังโฟลเดอร์
-    move_uploaded_file($_FILES['img_file_name']['tmp_name'],$path_copy); 
+
         echo '<script>
              setTimeout(function() {
               swal({
@@ -195,6 +204,16 @@ if(isset($_GET['id'])){
           <h3>ฟอร์มแก้ไขการอัพโหลดภาพ</h3>
 
           <form action="" method="post" enctype="multipart/form-data" onsubmit="return ValidateTypeFile(this);">
+
+          <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">ชื่อภาพ</label>
+              <div class="col-sm-7">
+                <input type="text" name="img_name" class="form-control" required placeholder="ชื่อภาพ" value="<?=$editData['img_name'];?>">
+              </div>
+          </div>
+
+
+
             <div class="row mb-2">
               <label class="col-sm-2 col-form-label">ภาพ</label>
               <div class="col-sm-7">
@@ -210,6 +229,7 @@ if(isset($_GET['id'])){
               <div class="col-sm-3">
                 <input type="hidden" name="id" value="<?=$editData['id'];?>">
                 <input type="hidden" name="imgFile" value="<?=$editData['img_file_name'];?>">
+                 <input type="hidden" name="oldPath" value="<?=$editData['img_path'];?>">
                 <button type="submit" name="action" value="edit" class="btn btn-primary"> ปรับปรุงข้อมูล </button>
               </div>
             </div>

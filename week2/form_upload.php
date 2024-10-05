@@ -1,12 +1,12 @@
 <?php
 //ถ้ามีค่าส่งมาจากฟอร์ม
-if(isset($_POST['action']) && $_POST['action']=='upload'){
+if(isset($_POST['img_name'])  && isset($_POST['action']) && $_POST['action']=='upload'){
 
-echo '<pre>';
-print_r($_POST);
-echo '<hr>';
-print_r($_FILES);
-exit();
+// echo '<pre>';
+// print_r($_POST);
+// echo '<hr>';
+// print_r($_FILES);
+// exit();
 
 //ไฟล์เชื่อมต่อฐานข้อมูล
 require_once 'config/condb.php'; 
@@ -35,13 +35,18 @@ try {
 
 }else{ $newname=''; }
     
+//ประกาศตัวแปรรับค่าจากฟอร์ม
+$img_name = $_POST['img_name'];
 
     //sql insert
     $stmt = $condb->prepare("INSERT INTO tbl_upload
-    (img_file_name)
+    (img_file_name, img_name, img_path)
     VALUES 
-    ('$newname')
+    ('$newname', :img_name, '$path_copy' )
     ");
+
+    //binparam 
+    $stmt->bindParam(':img_name', $img_name, PDO::PARAM_STR);
  
     //ถ้า stmt ทำงานถูกต้อง 
      if($stmt->execute()){
@@ -173,12 +178,24 @@ catch(Exception $e) {
           <h3>ฟอร์มอัพโหลดภาพ</h3>
 
           <form action="" method="post" enctype="multipart/form-data" onsubmit="return ValidateTypeFile(this);">
-            <div class="row mb-2">
+            
+
+          <div class="row mb-2">
+              <label class="col-sm-2 col-form-label">ชื่อภาพ</label>
+              <div class="col-sm-7">
+                <input type="text" name="img_name" class="form-control" required placeholder="ชื่อภาพ">
+              </div>
+          </div>
+          
+          
+        
+          <div class="row mb-2">
               <label class="col-sm-2 col-form-label">ภาพ</label>
               <div class="col-sm-7">
                 <input type="file" name="img_file_name" class="form-control" required  accept="image/*">
               </div>
             </div>
+            
             <div class="row mb-2">
               <label class="col-sm-2"></label>
               <div class="col-sm-3">

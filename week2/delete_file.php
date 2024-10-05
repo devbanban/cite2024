@@ -3,9 +3,9 @@
 //ถ้ามีค่าส่งมาจากฟอร์ม
  if(isset($_POST['id']) && isset($_POST['action']) && $_POST['action']=='delete'){
 
-echo '<pre>';
-print_r($_POST);
-exit();
+// echo '<pre>';
+// print_r($_POST);
+// exit();
 
 
 //ไฟล์เชื่อมต่อฐานข้อมูล

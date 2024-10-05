@@ -66,8 +66,8 @@ $result = $stmt->fetchAll();
               <tr>
                 <td><?=$row['id'];?></td>
                 <td><img src="upload/<?=$row['img_file_name'];?>" width="100px"></td>
-                <td>xx</td>
-                <td>xx</td>
+                <td><?=$row['img_name'];?></td>
+                <td><?=$row['img_path'];?></td>
                 <td><a href="edit_upload.php?id=<?=$row['id'];?>&act=edit" class="btn btn-warning btn-sm">แก้ไข</a></td>
                 <td>
                   <form action="delete_file.php" method="post">
